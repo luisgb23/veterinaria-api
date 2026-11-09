@@ -1,0 +1,15 @@
+{
+    "name": "luisgeymonat/veterinaria-api",
+    "autoload": {
+        "psr-4": {
+            "Luisgeymonat\\VeterinariaApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Luis Geymonat",
+            "email": "luisgeymonatbidart@gmail.com"
+        }
+    ],
+    "require": {}
+}

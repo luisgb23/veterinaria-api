@@ -1,0 +1,43 @@
+# MySQL para desarrollo local de la API de la veterinaria.
+#
+# Docker Compose lee las variables del mismo .env que usa la API:
+#
+#   DB_HOST=127.0.0.1
+#   DB_PORT=3308          <- puerto de TU PC (el de adentro del contenedor es siempre 3306)
+#   DB_NAME=itapebi
+#   DB_USER=root
+#   DB_PASS=una-clave
+#
+# La primera vez crea la base vacía con schema.sql. Para trabajar con tus datos reales,
+# importá el respaldo y la migración (ver README, "Usar la base actual").
+#
+#   docker compose up -d        # crea el contenedor
+#   docker compose ps           # cuando STATUS diga "healthy", MySQL ya acepta conexiones
+#   docker compose stop         # detiene (los datos se conservan)
+#   docker compose down -v      # BORRA el contenedor y TODOS los datos
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: veterinaria_db
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS:?Definí DB_PASS en el archivo .env (la clave de root de MySQL)}
+      TZ: America/Montevideo
+    ports:
+      - "${DB_PORT:-3308}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+volumes:
+  mysql_data:

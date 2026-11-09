@@ -1,0 +1,10 @@
+# Solo para Apache (con php -S no hace falta).
+RewriteEngine On
+
+# Apache no pasa la cabecera Authorization a PHP por defecto
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# Todo lo que no sea un archivo real va al front controller
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]

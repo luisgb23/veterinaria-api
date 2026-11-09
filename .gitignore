@@ -1,0 +1,5 @@
+.env
+vendor/
+storage/consultas/*
+!storage/consultas/.gitkeep
+.DS_Store
